@@ -2,19 +2,20 @@ package env
 
 func New(cfg Config) (*environment, error) {
 	env := &environment{
-		data: make(dictionary),
+		data:     make(dictionary),
+		useMutex: cfg.UseMutex,
 	}
 
-	if cfg.FilePaths != nil {
-		for _, path := range cfg.FilePaths {
+	if cfg.FromFilePaths != nil {
+		for _, path := range cfg.FromFilePaths {
 			if err := env.LoadFromFile(path); err != nil {
 				return nil, err
 			}
 		}
 	}
 
-	if cfg.Strings != nil {
-		for _, str := range cfg.Strings {
+	if cfg.FromStrings != nil {
+		for _, str := range cfg.FromStrings {
 			if err := env.LoadFromString(str); err != nil {
 				return nil, err
 			}

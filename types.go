@@ -7,12 +7,14 @@ import (
 type dictionary map[string]string
 
 type environment struct {
-	data  dictionary
-	mutex sync.Mutex
+	data     dictionary
+	mutex    sync.Mutex
+	useMutex bool
 }
 
 type Config struct {
-	FilePaths  []string
-	Strings    []string
-	FromSystem bool
+	FromFilePaths []string
+	FromStrings   []string
+	FromSystem    bool
+	UseMutex      bool
 }

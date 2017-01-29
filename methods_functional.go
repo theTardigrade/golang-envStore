@@ -1,8 +1,8 @@
 package env
 
 func (e *environment) Iterate(callback func(string, string)) {
-	e.mutex.Lock()
-	defer e.mutex.Unlock()
+	e.lockIfNecessary()
+	defer e.unlockIfNecessary()
 
 	for key, value := range e.data {
 		callback(key, value)
@@ -10,8 +10,8 @@ func (e *environment) Iterate(callback func(string, string)) {
 }
 
 func (e *environment) Map(callback func(string, string) string) {
-	e.mutex.Lock()
-	defer e.mutex.Unlock()
+	e.lockIfNecessary()
+	defer e.unlockIfNecessary()
 
 	for key, value := range e.data {
 		switch returnee := callback(key, value); returnee {
@@ -24,4 +24,3 @@ func (e *environment) Map(callback func(string, string) string) {
 		}
 	}
 }
-
