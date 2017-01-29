@@ -1,4 +1,4 @@
-# envStore (version 1.0.0)
+# envStore
 
 Store your environment variables from multiple sources (files, strings and the operating system) in one data structure, allowing easy access (potentially concurrent) from within your program.
 
@@ -8,13 +8,13 @@ env, err := envStore.New(envStore.Config{
 	FromFilePaths: []string{"data1.env", "data2.env"},
 	FromStrings: []string{"x=128\ny=test\nz=/bin/bash"},
 	FromSystem: true,
-	UseMutex: false,
+	UseMutex: true,
 })
 if err != nil {
 	panic(err)
 }
 
 env.Iterate(func(key, value string) {
-	fmt.Printf("%v :: %vn, key, value")
+	fmt.Printf("%v :: %v\n", key, value)
 })
 ```
