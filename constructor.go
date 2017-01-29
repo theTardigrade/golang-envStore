@@ -1,4 +1,4 @@
-package env
+package envStore
 
 func New(cfg Config) (*environment, error) {
 	env := &environment{

@@ -1,4 +1,4 @@
-package env
+package envStore
 
 func (e *environment) Iterate(callback func(string, string)) {
 	e.lockIfNecessary()

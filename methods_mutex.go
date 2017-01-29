@@ -1,4 +1,4 @@
-package env
+package envStore
 
 func (e *environment) lockIfNecessary() {
 	if !e.useMutex {
