@@ -1,6 +1,7 @@
 package envStore
 
 import (
+	"bytes"
 	"strings"
 )
 
@@ -88,4 +89,25 @@ func (e *environment) Pairs() [][]string {
 	}
 
 	return pairs
+}
+
+func (e *environment) String() string {
+	e.lockIfNecessary()
+	defer e.unlockIfNecessary()
+
+	var buffer bytes.Buffer
+	var passedFirstIteration bool
+
+	for k, v := range e.data {
+		if passedFirstIteration {
+			buffer.WriteRune('\n')
+		} else {
+			passedFirstIteration = true
+		}
+		buffer.WriteString(k)
+		buffer.WriteRune('=')
+		buffer.WriteString(v)
+	}
+
+	return buffer.String()
 }
