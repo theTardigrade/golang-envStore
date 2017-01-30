@@ -86,6 +86,7 @@ func (e *environment) Pairs() [][]string {
 	for k, v := range e.data {
 		pairs[i] = make([]string, 2)
 		pairs[i][0], pairs[i][1] = k, v
+		i++
 	}
 
 	return pairs
