@@ -11,5 +11,4 @@ func AssertEqual(t *testing.T, name string, expectedValue, actualValue interface
 	}
 
 	t.Errorf("Expected %s to be \"%s\", but got \"%s\".", name, expectedValue, actualValue)
-	}
 }
