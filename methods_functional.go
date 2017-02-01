@@ -1,6 +1,6 @@
 package envStore
 
-func (e *environment) Iterate(callback func(string, string)) {
+func (e *Environment) Iterate(callback func(string, string)) {
 	e.lockIfNecessary()
 	defer e.unlockIfNecessary()
 
@@ -9,7 +9,7 @@ func (e *environment) Iterate(callback func(string, string)) {
 	}
 }
 
-func (e *environment) Map(callback func(string, string) string) {
+func (e *Environment) Map(callback func(string, string) string) {
 	e.lockIfNecessary()
 	defer e.unlockIfNecessary()
 

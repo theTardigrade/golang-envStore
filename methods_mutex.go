@@ -1,6 +1,6 @@
 package envStore
 
-func (e *environment) lockIfNecessary() {
+func (e *Environment) lockIfNecessary() {
 	if !e.useMutex {
 		return
 	}
@@ -8,7 +8,7 @@ func (e *environment) lockIfNecessary() {
 	e.mutex.Lock()
 }
 
-func (e *environment) unlockIfNecessary() {
+func (e *Environment) unlockIfNecessary() {
 	if !e.useMutex {
 		return
 	}

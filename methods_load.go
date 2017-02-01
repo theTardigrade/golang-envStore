@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-func (e *environment) LoadFromFile(path string) error {
+func (e *Environment) LoadFromFile(path string) error {
 	file, err := os.Open(path)
 	if err != nil {
 		return err
@@ -28,7 +28,7 @@ func (e *environment) LoadFromFile(path string) error {
 	return nil
 }
 
-func (e *environment) LoadFromString(text string) error {
+func (e *Environment) LoadFromString(text string) error {
 	for _, line := range bytes.Split([]byte(text), []byte{'\n'}) {
 		key, value, err := parseLine(string(line))
 		if err != nil {
@@ -40,7 +40,7 @@ func (e *environment) LoadFromString(text string) error {
 	return nil
 }
 
-func (e *environment) LoadFromSystem() error {
+func (e *Environment) LoadFromSystem() error {
 	for _, pair := range os.Environ() {
 		key, value, err := parseLine(pair)
 		if err != nil {

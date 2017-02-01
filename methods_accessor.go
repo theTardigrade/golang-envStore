@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-func (e *environment) Get(key string) (value string, ok bool) {
+func (e *Environment) Get(key string) (value string, ok bool) {
 	e.lockIfNecessary()
 	defer e.unlockIfNecessary()
 
@@ -13,28 +13,40 @@ func (e *environment) Get(key string) (value string, ok bool) {
 	return
 }
 
-func (e *environment) Set(key, value string) {
+func (e *Environment) MustGet(key string) (value string) {
+	e.lockIfNecessary()
+	defer e.unlockIfNecessary()
+
+	value, ok := e.data[strings.ToUpper(key)]
+	if !ok {
+		panic("not found")
+	}
+
+	return
+}
+
+func (e *Environment) Set(key, value string) {
 	e.lockIfNecessary()
 	defer e.unlockIfNecessary()
 
 	e.data[strings.ToUpper(key)] = value
 }
 
-func (e *environment) Unset(key string) {
+func (e *Environment) Unset(key string) {
 	e.lockIfNecessary()
 	defer e.unlockIfNecessary()
 
 	delete(e.data, strings.ToUpper(key))
 }
 
-func (e *environment) Clear() {
+func (e *Environment) Clear() {
 	e.lockIfNecessary()
 	defer e.unlockIfNecessary()
 
 	e.data = make(dictionary)
 }
 
-func (e *environment) Contains(key string) bool {
+func (e *Environment) Contains(key string) bool {
 	e.lockIfNecessary()
 	defer e.unlockIfNecessary()
 
@@ -42,14 +54,14 @@ func (e *environment) Contains(key string) bool {
 	return ok
 }
 
-func (e *environment) Count() int {
+func (e *Environment) Count() int {
 	e.lockIfNecessary()
 	defer e.unlockIfNecessary()
 
 	return len(e.data)
 }
 
-func (e *environment) Keys() []string {
+func (e *Environment) Keys() []string {
 	e.lockIfNecessary()
 	defer e.unlockIfNecessary()
 
@@ -63,7 +75,7 @@ func (e *environment) Keys() []string {
 	return keys
 }
 
-func (e *environment) Values() []string {
+func (e *Environment) Values() []string {
 	e.lockIfNecessary()
 	defer e.unlockIfNecessary()
 
@@ -77,7 +89,7 @@ func (e *environment) Values() []string {
 	return values
 }
 
-func (e *environment) Pairs() [][]string {
+func (e *Environment) Pairs() [][]string {
 	e.lockIfNecessary()
 	defer e.unlockIfNecessary()
 
@@ -92,7 +104,7 @@ func (e *environment) Pairs() [][]string {
 	return pairs
 }
 
-func (e *environment) String() string {
+func (e *Environment) String() string {
 	e.lockIfNecessary()
 	defer e.unlockIfNecessary()
 

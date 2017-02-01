@@ -1,7 +1,7 @@
 package envStore
 
-func New(cfg Config) (*environment, error) {
-	env := &environment{
+func New(cfg Config) (*Environment, error) {
+	env := &Environment{
 		data:     make(dictionary),
 		useMutex: cfg.UseMutex,
 	}

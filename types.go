@@ -6,7 +6,7 @@ import (
 
 type dictionary map[string]string
 
-type environment struct {
+type Environment struct {
 	data     dictionary
 	mutex    sync.Mutex
 	useMutex bool
