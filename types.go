@@ -10,6 +10,7 @@ type Environment struct {
 	data     dictionary
 	mutex    sync.Mutex
 	useMutex bool
+	ignoreEmptyLines bool
 }
 
 type Config struct {
@@ -17,4 +18,5 @@ type Config struct {
 	FromStrings   []string
 	FromSystem    bool
 	UseMutex      bool
+	IgnoreEmptyLines bool
 }

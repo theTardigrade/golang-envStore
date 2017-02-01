@@ -6,6 +6,15 @@ import (
 	"os"
 )
 
+func (e *Environment) conditionalSet(key, value string, err error) error {
+	if err != nil && (err != NoKeyParseErr || !e.ignoreEmptyLines) {
+		return err
+	}
+
+	e.Set(key, value)
+	return nil
+}
+
 func (e *Environment) LoadFromFile(path string) error {
 	file, err := os.Open(path)
 	if err != nil {
@@ -16,10 +25,10 @@ func (e *Environment) LoadFromFile(path string) error {
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		key, value, err := parseLine(scanner.Text())
+		err = e.conditionalSet(key, value, err)
 		if err != nil {
 			return err
 		}
-		e.Set(key, value)
 	}
 	if scanner.Err() != nil {
 		return err
@@ -31,10 +40,10 @@ func (e *Environment) LoadFromFile(path string) error {
 func (e *Environment) LoadFromString(text string) error {
 	for _, line := range bytes.Split([]byte(text), []byte{'\n'}) {
 		key, value, err := parseLine(string(line))
+		err = e.conditionalSet(key, value, err)
 		if err != nil {
 			return err
 		}
-		e.Set(key, value)
 	}
 
 	return nil
@@ -43,10 +52,10 @@ func (e *Environment) LoadFromString(text string) error {
 func (e *Environment) LoadFromSystem() error {
 	for _, pair := range os.Environ() {
 		key, value, err := parseLine(pair)
+		err = e.conditionalSet(key, value, err)
 		if err != nil {
 			return err
 		}
-		e.Set(key, value)
 	}
 
 	return nil

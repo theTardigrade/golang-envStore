@@ -9,6 +9,7 @@ env, err := envStore.New(envStore.Config{
 	FromStrings: []string{"x=128\ny=test\nz=/bin/bash"},
 	FromSystem: true,
 	UseMutex: true,
+	IgnoreEmptyLines: true,
 })
 if err != nil {
 	panic(err)

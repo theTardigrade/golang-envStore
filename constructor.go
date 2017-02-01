@@ -4,6 +4,7 @@ func New(cfg Config) (*Environment, error) {
 	env := &Environment{
 		data:     make(dictionary),
 		useMutex: cfg.UseMutex,
+		ignoreEmptyLines: cfg.IgnoreEmptyLines,
 	}
 
 	if cfg.FromFilePaths != nil {
