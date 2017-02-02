@@ -52,10 +52,10 @@ func (e *Environment) LoadFromString(text string) error {
 func (e *Environment) LoadFromSystem() error {
 	for _, pair := range os.Environ() {
 		key, value, err := parseLine(pair)
-		err = e.conditionalSet(key, value, err)
 		if err != nil {
 			return err
 		}
+		e.Set(key, value)
 	}
 
 	return nil
