@@ -24,9 +24,8 @@ var testParseLineData = []struct {
 		"((msg) => { console.log(msg); })('test');",
 		nil,
 	},
-	{"oranges=the only fruit", "ORANGES", "the only fruit", nil},
 	{"Oranges=Apples", "ORANGES", "Apples", nil},
-	{"=", "", "", NoKeyParseErr},
+	{"=LockedOut", "", "", NoKeyParseErr},
 	{"Nihilist=", "", "", NoValParseErr},
 	{
 		func() string {
