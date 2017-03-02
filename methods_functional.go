@@ -14,13 +14,24 @@ func (e *Environment) Map(callback func(string, string) string) {
 	defer e.unlockIfNecessary()
 
 	for key, value := range e.data {
-		switch returnee := callback(key, value); returnee {
+		switch newValue := callback(key, value); newValue {
 		case value:
 			continue
 		case "":
 			delete(e.data, key)
 		default:
-			e.data[key] = returnee
+			e.data[key] = newValue
+		}
+	}
+}
+
+func (e *Environment) Filter(callback func(string, string) bool) {
+	e.lockIfNecessary()
+	defer e.unlockIfNecessary()
+
+	for key, value := range e.data {
+		if retain := callback(key, value); !retain {
+			delete(e.data, key)
 		}
 	}
 }
