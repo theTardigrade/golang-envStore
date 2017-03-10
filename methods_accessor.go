@@ -2,24 +2,69 @@ package envStore
 
 import (
 	"bytes"
+	"errors"
+	"strconv"
 	"strings"
 )
 
-func (e *Environment) Get(key string) (value string, ok bool) {
-	e.lockIfNecessary()
-	defer e.unlockIfNecessary()
+var (
+	NotFoundErr = errors.New("environment variable not found")
+)
 
-	value, ok = e.data[strings.ToUpper(key)]
-	return
-}
-
-func (e *Environment) MustGet(key string) (value string) {
+func (e *Environment) Get(key string) (value string, err error) {
 	e.lockIfNecessary()
 	defer e.unlockIfNecessary()
 
 	value, ok := e.data[strings.ToUpper(key)]
 	if !ok {
-		panic("not found")
+		err = NotFoundErr
+	}
+
+	return
+}
+
+func (e *Environment) GetInt(key string) (value int, err error) {
+	rawValue, err := e.Get(key)
+	if err != nil {
+		return
+	}
+
+	value, err = strconv.Atoi(rawValue)
+	return
+}
+
+func (e *Environment) GetBool(key string) (value bool, err error) {
+	rawValue, err := e.Get(key)
+	if err != nil {
+		return
+	}
+
+	value, err = strconv.ParseBool(rawValue)
+	return
+}
+
+func (e *Environment) MustGet(key string) (value string) {
+	value, err := e.Get(key)
+	if err != nil {
+		panic(err)
+	}
+
+	return
+}
+
+func (e *Environment) MustGetInt(key string) (value int) {
+	value, err := e.GetInt(key)
+	if err != nil {
+		panic(err)
+	}
+
+	return
+}
+
+func (e *Environment) MustGetBool(key string) (value bool) {
+	value, err := e.GetBool(key)
+	if err != nil {
+		panic(err)
 	}
 
 	return
