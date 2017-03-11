@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	NotFoundErr = errors.New("environment variable not found")
+	KeyNotFoundErr = errors.New("environment variable not found")
 )
 
 func (e *Environment) Get(key string) (value string, err error) {
@@ -17,7 +17,7 @@ func (e *Environment) Get(key string) (value string, err error) {
 
 	value, ok := e.data[strings.ToUpper(key)]
 	if !ok {
-		err = NotFoundErr
+		err = KeyNotFoundErr
 	}
 
 	return
@@ -30,6 +30,16 @@ func (e *Environment) GetInt(key string) (value int, err error) {
 	}
 
 	value, err = strconv.Atoi(rawValue)
+	return
+}
+
+func (e *Environment) GetFloat(key string) (value float64, err error) {
+	rawValue, err := e.Get(key)
+	if err != nil {
+		return
+	}
+
+	value, err = strconv.ParseFloat(rawValue, 64)
 	return
 }
 
@@ -54,6 +64,15 @@ func (e *Environment) MustGet(key string) (value string) {
 
 func (e *Environment) MustGetInt(key string) (value int) {
 	value, err := e.GetInt(key)
+	if err != nil {
+		panic(err)
+	}
+
+	return
+}
+
+func (e *Environment) MustGetFloat(key string) (value float64) {
+	value, err := e.GetFloat(key)
 	if err != nil {
 		panic(err)
 	}
