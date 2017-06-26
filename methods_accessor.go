@@ -66,7 +66,7 @@ func mustPanic(err error, key string) {
 func (e *Environment) MustGet(key string) (value string) {
 	value, err := e.Get(key)
 	if err != nil {
-		MustPanic(err, key)
+		mustPanic(err, key)
 	}
 
 	return
@@ -75,7 +75,7 @@ func (e *Environment) MustGet(key string) (value string) {
 func (e *Environment) MustGetInt(key string) (value int) {
 	value, err := e.GetInt(key)
 	if err != nil {
-		MustPanic(err, key)
+		mustPanic(err, key)
 	}
 
 	return
@@ -84,7 +84,7 @@ func (e *Environment) MustGetInt(key string) (value int) {
 func (e *Environment) MustGetFloat(key string) (value float64) {
 	value, err := e.GetFloat(key)
 	if err != nil {
-		MustPanic(err, key)
+		mustPanic(err, key)
 	}
 
 	return
@@ -93,7 +93,7 @@ func (e *Environment) MustGetFloat(key string) (value float64) {
 func (e *Environment) MustGetBool(key string) (value bool) {
 	value, err := e.GetBool(key)
 	if err != nil {
-		MustPanic(err, key)
+		mustPanic(err, key)
 	}
 
 	return
