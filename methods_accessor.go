@@ -53,7 +53,7 @@ func (e *Environment) GetBool(key string) (value bool, err error) {
 	return
 }
 
-func MustPanic(err error, key string) {
+func mustPanic(err error, key string) {
 	var msg string = err.Error()
 
 	if err == KeyNotFoundErr {
