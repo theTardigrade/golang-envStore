@@ -23,6 +23,16 @@ func (e *Environment) Get(key string) (value string, err error) {
 	return
 }
 
+func (e *Environment) GetByteSlice(key string) (value []byte, err error) {
+	rawValue, err := e.Get(key)
+	if err != nil {
+		return
+	}
+
+	value = []byte(rawValue)
+	return
+}
+
 func (e *Environment) GetInt(key string) (value int, err error) {
 	rawValue, err := e.Get(key)
 	if err != nil {
@@ -30,6 +40,17 @@ func (e *Environment) GetInt(key string) (value int, err error) {
 	}
 
 	value, err = strconv.Atoi(rawValue)
+	return
+}
+
+func (e *Environment) GetUint(key string) (value uint, err error) {
+	rawValue, err := e.Get(key)
+	if err != nil {
+		return
+	}
+
+	value64, err := strconv.ParseUint(rawValue, 10, 0)
+	value = uint(value64)
 	return
 }
 
@@ -72,8 +93,26 @@ func (e *Environment) MustGet(key string) (value string) {
 	return
 }
 
+func (e *Environment) MustGetByteSlice(key string) (value []byte) {
+	value, err := e.GetByteSlice(key)
+	if err != nil {
+		mustPanic(err, key)
+	}
+
+	return
+}
+
 func (e *Environment) MustGetInt(key string) (value int) {
 	value, err := e.GetInt(key)
+	if err != nil {
+		mustPanic(err, key)
+	}
+
+	return
+}
+
+func (e *Environment) MustGetUint(key string) (value uint) {
+	value, err := e.GetUint(key)
 	if err != nil {
 		mustPanic(err, key)
 	}

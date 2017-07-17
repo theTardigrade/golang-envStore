@@ -11,6 +11,7 @@ type Environment struct {
 	mutex            sync.Mutex
 	useMutex         bool
 	ignoreEmptyLines bool
+	acceptComments   bool
 }
 
 type Config struct {
@@ -19,4 +20,5 @@ type Config struct {
 	FromSystem       bool
 	UseMutex         bool
 	IgnoreEmptyLines bool
+	AcceptComments   bool
 }

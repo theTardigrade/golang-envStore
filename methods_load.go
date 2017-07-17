@@ -7,7 +7,7 @@ import (
 )
 
 func (e *Environment) conditionalSet(key, value string, err error) error {
-	if err != nil && (err != NoKeyParseErr || !e.ignoreEmptyLines) {
+	if err != nil && (err != NoKeyParseErr || !e.ignoreEmptyLines) && (err != CommentParseErr && e.acceptComments) {
 		return err
 	}
 

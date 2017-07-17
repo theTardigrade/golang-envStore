@@ -3,6 +3,7 @@ package envStore
 import (
 	"bytes"
 	"errors"
+	"strings"
 )
 
 const (
@@ -10,19 +11,22 @@ const (
 )
 
 var (
+	CommentParseErr    error = errors.New("Line is commented out.")
 	NoKeyParseErr      error = errors.New("Key must be provided.")
 	NoValParseErr      error = errors.New("Value must be provided.")
 	MaxLineLenParseErr error = errors.New("Line length is greater than the maximum allowed.")
 )
 
 func parseLine(line string) (key, value string, err error) {
-	var buffer bytes.Buffer
-	var metEquals bool
+	line = strings.TrimSpace(line)
 
 	if len(line) > MaxLineLen {
 		err = MaxLineLenParseErr
 		return
 	}
+
+	var buffer bytes.Buffer
+	var metEquals bool
 
 	for _, r := range line {
 		if r == '=' && !metEquals {
@@ -40,6 +44,8 @@ func parseLine(line string) (key, value string, err error) {
 
 	if key == "" {
 		err = NoKeyParseErr
+	} else if key[0] == '#' {
+		err = CommentParseErr
 	} else if buffer.Len() == 0 {
 		err = NoValParseErr
 	} else {
