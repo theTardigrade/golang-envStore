@@ -10,8 +10,8 @@ func (e *Environment) Iterate(callback func(string, string)) {
 }
 
 func (e *Environment) Map(callback func(string, string) string) {
-	e.lockIfNecessary()
-	defer e.unlockIfNecessary()
+	e.writeLockIfNecessary()
+	defer e.writeUnlockIfNecessary()
 
 	for key, value := range e.data {
 		switch newValue := callback(key, value); newValue {
@@ -26,8 +26,8 @@ func (e *Environment) Map(callback func(string, string) string) {
 }
 
 func (e *Environment) Filter(callback func(string, string) bool) {
-	e.lockIfNecessary()
-	defer e.unlockIfNecessary()
+	e.writeLockIfNecessary()
+	defer e.writeUnlockIfNecessary()
 
 	for key, value := range e.data {
 		if retain := callback(key, value); !retain {

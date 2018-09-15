@@ -139,22 +139,22 @@ func (e *Environment) MustGetBool(key string) (value bool) {
 }
 
 func (e *Environment) Set(key, value string) {
-	e.lockIfNecessary()
-	defer e.unlockIfNecessary()
+	e.writeLockIfNecessary()
+	defer e.writeUnlockIfNecessary()
 
 	e.data[strings.ToUpper(key)] = value
 }
 
 func (e *Environment) Unset(key string) {
-	e.lockIfNecessary()
-	defer e.unlockIfNecessary()
+	e.writeLockIfNecessary()
+	defer e.writeUnlockIfNecessary()
 
 	delete(e.data, strings.ToUpper(key))
 }
 
 func (e *Environment) Clear() {
-	e.lockIfNecessary()
-	defer e.unlockIfNecessary()
+	e.writeLockIfNecessary()
+	defer e.writeUnlockIfNecessary()
 
 	e.data = make(dictionary)
 }

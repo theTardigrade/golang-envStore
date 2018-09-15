@@ -1,12 +1,12 @@
 package envStore
 
-func (e *Environment) lockIfNecessary() {
+func (e *Environment) writeLockIfNecessary() {
 	if e.useMutex {
 		e.mutex.Lock()
 	}
 }
 
-func (e *Environment) unlockIfNecessary() {
+func (e *Environment) writeUnlockIfNecessary() {
 	if e.useMutex {
 		e.mutex.Unlock()
 	}
