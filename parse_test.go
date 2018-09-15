@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"testing"
 
-	"./test"
+	"github.com/theTardigrade/envStore/test"
 )
 
 var testParseLineData = []struct {

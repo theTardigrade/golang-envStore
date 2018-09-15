@@ -12,8 +12,8 @@ var (
 )
 
 func (e *Environment) Get(key string) (value string, err error) {
-	e.lockIfNecessary()
-	defer e.unlockIfNecessary()
+	e.readLockIfNecessary()
+	defer e.readUnlockIfNecessary()
 
 	value, ok := e.data[strings.ToUpper(key)]
 	if !ok {
@@ -160,23 +160,23 @@ func (e *Environment) Clear() {
 }
 
 func (e *Environment) Contains(key string) bool {
-	e.lockIfNecessary()
-	defer e.unlockIfNecessary()
+	e.readLockIfNecessary()
+	defer e.readUnlockIfNecessary()
 
 	_, ok := e.data[strings.ToUpper(key)]
 	return ok
 }
 
 func (e *Environment) Count() int {
-	e.lockIfNecessary()
-	defer e.unlockIfNecessary()
+	e.readLockIfNecessary()
+	defer e.readUnlockIfNecessary()
 
 	return len(e.data)
 }
 
 func (e *Environment) Keys() []string {
-	e.lockIfNecessary()
-	defer e.unlockIfNecessary()
+	e.readLockIfNecessary()
+	defer e.readUnlockIfNecessary()
 
 	i := 0
 	keys := make([]string, len(e.data))
@@ -189,8 +189,8 @@ func (e *Environment) Keys() []string {
 }
 
 func (e *Environment) Values() []string {
-	e.lockIfNecessary()
-	defer e.unlockIfNecessary()
+	e.readLockIfNecessary()
+	defer e.readUnlockIfNecessary()
 
 	i := 0
 	values := make([]string, len(e.data))
@@ -203,8 +203,8 @@ func (e *Environment) Values() []string {
 }
 
 func (e *Environment) Pairs() [][]string {
-	e.lockIfNecessary()
-	defer e.unlockIfNecessary()
+	e.readLockIfNecessary()
+	defer e.readUnlockIfNecessary()
 
 	i := 0
 	pairs := make([][]string, len(e.data))
@@ -218,8 +218,8 @@ func (e *Environment) Pairs() [][]string {
 }
 
 func (e *Environment) String() string {
-	e.lockIfNecessary()
-	defer e.unlockIfNecessary()
+	e.readLockIfNecessary()
+	defer e.readUnlockIfNecessary()
 
 	var buffer bytes.Buffer
 	var passedFirstIteration bool

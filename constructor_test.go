@@ -3,7 +3,7 @@ package envStore
 import (
 	"testing"
 
-	"./test"
+	"github.com/theTardigrade/envStore/test"
 )
 
 var testNewData = []struct {

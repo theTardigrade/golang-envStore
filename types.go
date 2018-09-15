@@ -8,7 +8,7 @@ type dictionary map[string]string
 
 type Environment struct {
 	data             dictionary
-	mutex            sync.Mutex
+	mutex            sync.RWMutex
 	useMutex         bool
 	ignoreEmptyLines bool
 	acceptComments   bool

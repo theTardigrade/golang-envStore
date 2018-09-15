@@ -1,8 +1,8 @@
 package envStore
 
 func (e *Environment) Iterate(callback func(string, string)) {
-	e.lockIfNecessary()
-	defer e.unlockIfNecessary()
+	e.readLockIfNecessary()
+	defer e.readUnlockIfNecessary()
 
 	for key, value := range e.data {
 		callback(key, value)

@@ -6,8 +6,8 @@ import (
 )
 
 func (e *Environment) SaveToSystem() error {
-	e.lockIfNecessary()
-	defer e.unlockIfNecessary()
+	e.readLockIfNecessary()
+	defer e.readUnlockIfNecessary()
 
 	for key, value := range e.data {
 		if err := os.Setenv(key, value); err != nil {
