@@ -49,6 +49,15 @@ func (e *Environment) LoadFromString(text string) error {
 	return nil
 }
 
+func (e *Environment) LoadFromEnviroment(e2 *Environment) {
+	e2.readLockIfNecessary()
+	defer e2.readUnlockIfNecessary()
+
+	for key, value := range e2.data {
+		e.Set(key, value)
+	}
+}
+
 func (e *Environment) LoadFromSystem() error {
 	for _, pair := range os.Environ() {
 		key, value, err := parseLine(pair)

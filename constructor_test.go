@@ -1,6 +1,7 @@
 package envStore
 
 import (
+	"sync"
 	"testing"
 
 	"github.com/theTardigrade/envStore/test"
@@ -28,6 +29,7 @@ var testNewData = []struct {
 		},
 		&Environment{
 			data:             dictionary{"KEY": "value"},
+			mutex:            &sync.RWMutex{},
 			useMutex:         true,
 			ignoreEmptyLines: true,
 		},

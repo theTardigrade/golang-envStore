@@ -1,11 +1,19 @@
 package envStore
 
+import (
+	"sync"
+)
+
 func New(cfg Config) (*Environment, error) {
 	env := &Environment{
 		data:             make(dictionary),
 		useMutex:         cfg.UseMutex,
 		ignoreEmptyLines: cfg.IgnoreEmptyLines,
 		acceptComments:   cfg.AcceptComments,
+	}
+
+	if cfg.UseMutex {
+		env.mutex = &sync.RWMutex{}
 	}
 
 	if cfg.FromFilePaths != nil {
@@ -21,6 +29,12 @@ func New(cfg Config) (*Environment, error) {
 			if err := env.LoadFromString(str); err != nil {
 				return nil, err
 			}
+		}
+	}
+
+	if cfg.FromEnvironments != nil {
+		for _, env2 := range cfg.FromEnvironments {
+			env.LoadFromEnviroment(env2)
 		}
 	}
 

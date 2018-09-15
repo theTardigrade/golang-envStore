@@ -8,7 +8,7 @@ type dictionary map[string]string
 
 type Environment struct {
 	data             dictionary
-	mutex            sync.RWMutex
+	mutex            *sync.RWMutex
 	useMutex         bool
 	ignoreEmptyLines bool
 	acceptComments   bool
@@ -17,6 +17,7 @@ type Environment struct {
 type Config struct {
 	FromFilePaths    []string
 	FromStrings      []string
+	FromEnvironments []*Environment
 	FromSystem       bool
 	UseMutex         bool
 	IgnoreEmptyLines bool
