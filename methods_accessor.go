@@ -75,10 +75,10 @@ func (e *Environment) GetBool(key string) (value bool, err error) {
 }
 
 func mustPanic(err error, key string) {
-	var msg string = err.Error()
+	msg := err.Error()
 
 	if err == KeyNotFoundErr {
-		msg += " [" + key + "]"
+		msg += " [" + strings.ToUpper(key) + "]"
 	}
 
 	panic(msg)
