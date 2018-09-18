@@ -12,6 +12,7 @@ type Environment struct {
 	useMutex         bool
 	ignoreEmptyLines bool
 	acceptComments   bool
+	maxKeyLength     int
 }
 
 type Config struct {
@@ -22,4 +23,5 @@ type Config struct {
 	UseMutex         bool
 	IgnoreEmptyLines bool
 	AcceptComments   bool
+	MaxKeyLength     int
 }

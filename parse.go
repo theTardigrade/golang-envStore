@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	MaxLineLen = 1 << 12
+	MaxLineLen = 1 << 18
 )
 
 var (

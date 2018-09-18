@@ -10,6 +10,7 @@ func New(cfg Config) (*Environment, error) {
 		useMutex:         cfg.UseMutex,
 		ignoreEmptyLines: cfg.IgnoreEmptyLines,
 		acceptComments:   cfg.AcceptComments,
+		maxKeyLength:     cfg.MaxKeyLength,
 	}
 
 	if cfg.UseMutex {
@@ -34,7 +35,9 @@ func New(cfg Config) (*Environment, error) {
 
 	if cfg.FromEnvironments != nil {
 		for _, env2 := range cfg.FromEnvironments {
-			env.LoadFromEnviroment(env2)
+			if err := env.LoadFromEnviroment(env2); err != nil {
+				return nil, err
+			}
 		}
 	}
 

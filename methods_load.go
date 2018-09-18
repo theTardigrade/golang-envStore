@@ -11,8 +11,7 @@ func (e *Environment) conditionalSet(key, value string, err error) error {
 		return err
 	}
 
-	e.Set(key, value)
-	return nil
+	return e.Set(key, value)
 }
 
 func (e *Environment) LoadFromFile(path string) error {
@@ -49,13 +48,17 @@ func (e *Environment) LoadFromString(text string) error {
 	return nil
 }
 
-func (e *Environment) LoadFromEnviroment(e2 *Environment) {
+func (e *Environment) LoadFromEnviroment(e2 *Environment) error {
 	e2.readLockIfNecessary()
 	defer e2.readUnlockIfNecessary()
 
 	for key, value := range e2.data {
-		e.Set(key, value)
+		if err := e.Set(key, value); err != nil {
+			return err
+		}
 	}
+
+	return nil
 }
 
 func (e *Environment) LoadFromSystem() error {
@@ -64,7 +67,9 @@ func (e *Environment) LoadFromSystem() error {
 		if err != nil {
 			return err
 		}
-		e.Set(key, value)
+		if err = e.Set(key, value); err != nil {
+			return err
+		}
 	}
 
 	return nil
