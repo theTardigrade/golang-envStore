@@ -5,6 +5,7 @@ import (
 	"errors"
 	"strconv"
 	"strings"
+	"time"
 )
 
 var (
@@ -80,6 +81,16 @@ func (e *Environment) GetBool(key string) (value bool, err error) {
 	return
 }
 
+func (e *Environment) GetDuration(key string) (value time.Duration, err error) {
+	rawValue, err := e.Get(key)
+	if err != nil {
+		return
+	}
+
+	value, err = time.ParseDuration(rawValue)
+	return
+}
+
 func mustGetPanic(err error, key string) {
 	msg := err.Error()
 
@@ -137,6 +148,15 @@ func (e *Environment) MustGetFloat(key string) (value float64) {
 
 func (e *Environment) MustGetBool(key string) (value bool) {
 	value, err := e.GetBool(key)
+	if err != nil {
+		mustGetPanic(err, key)
+	}
+
+	return
+}
+
+func (e *Environment) MustGetDuration(key string) (value time.Duration) {
+	value, err := e.GetDuration(key)
 	if err != nil {
 		mustGetPanic(err, key)
 	}
