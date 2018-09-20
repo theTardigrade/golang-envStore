@@ -14,15 +14,15 @@ var (
 )
 
 func (e *Environment) Get(key string) (value string, err error) {
-	if e.maxKeyLength > 0 && len(key) > e.maxKeyLength {
-		err = ErrKeyLenBeyondMax
+	key, err = e.formatKey(key)
+	if err != nil {
 		return
 	}
 
 	e.readLockIfNecessary()
-	defer e.readUnlockIfNecessary()
+	value, ok := e.data[key]
+	e.readUnlockIfNecessary()
 
-	value, ok := e.data[strings.ToUpper(key)]
 	if !ok {
 		err = ErrKeyNotFound
 	}
@@ -181,9 +181,9 @@ func (e *Environment) Set(key, value string) (err error) {
 	}
 
 	e.writeLockIfNecessary()
-	defer e.writeUnlockIfNecessary()
-
 	e.data[key] = value
+	e.writeUnlockIfNecessary()
+
 	return
 }
 
@@ -194,15 +194,14 @@ func (e *Environment) MustSet(key, value string) {
 }
 
 func (e *Environment) Unset(key string) (err error) {
-	key, err = e.formatKey(key)
-	if err != nil {
+	if key, err = e.formatKey(key); err != nil {
 		return
 	}
 
 	e.writeLockIfNecessary()
-	defer e.writeUnlockIfNecessary()
-
 	delete(e.data, key)
+	e.writeUnlockIfNecessary()
+
 	return
 }
 
@@ -214,9 +213,8 @@ func (e *Environment) MustUnset(key string) {
 
 func (e *Environment) Clear() {
 	e.writeLockIfNecessary()
-	defer e.writeUnlockIfNecessary()
-
 	e.data = make(dictionary)
+	e.writeUnlockIfNecessary()
 }
 
 func (e *Environment) Contains(key string) (found bool, err error) {
@@ -226,9 +224,9 @@ func (e *Environment) Contains(key string) (found bool, err error) {
 	}
 
 	e.readLockIfNecessary()
-	defer e.readUnlockIfNecessary()
-
 	_, found = e.data[key]
+	e.readUnlockIfNecessary()
+
 	return
 }
 
