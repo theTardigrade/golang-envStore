@@ -293,18 +293,31 @@ func (e *Environment) String() string {
 	e.readLockIfNecessary()
 	defer e.readUnlockIfNecessary()
 
+	var err error
 	var buffer bytes.Buffer
 	var passedFirstIteration bool
 
 	for k, v := range e.data {
 		if passedFirstIteration {
-			buffer.WriteRune('\n')
+			if err = buffer.WriteByte('\n'); err != nil {
+				panic(err)
+			}
 		} else {
 			passedFirstIteration = true
 		}
-		buffer.WriteString(k)
-		buffer.WriteRune('=')
-		buffer.WriteString(v)
+		if _, err = buffer.WriteString(k); err != nil {
+			panic(err)
+		}
+		if err = buffer.WriteByte('='); err != nil {
+			panic(err)
+		}
+		if _, err = buffer.WriteString(v); err != nil {
+			panic(err)
+		}
+	}
+
+	if err = buffer.WriteByte('\n'); err != nil {
+		panic(err)
 	}
 
 	return buffer.String()
