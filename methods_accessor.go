@@ -164,6 +164,14 @@ func (e *Environment) MustGetDuration(key string) (value time.Duration) {
 	return
 }
 
+func (e *Environment) LazyGet(key string) (value string) {
+	value, err := e.Get(key)
+	if err != nil {
+		value = ""
+	}
+	return
+}
+
 func (e *Environment) formatKey(key string) (string, error) {
 	key = strings.ToUpper(key)
 
