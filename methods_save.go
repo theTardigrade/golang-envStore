@@ -19,6 +19,9 @@ func (e *Environment) SaveToSystem() error {
 }
 
 func (e *Environment) SaveToFile(path string) error {
+	e.readLockIfNecessary()
+	defer e.readUnlockIfNecessary()
+
 	f, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE, 0644)
 	if err != nil {
 		return err
