@@ -165,9 +165,17 @@ func (e *Environment) MustGetDuration(key string) (value time.Duration) {
 }
 
 func (e *Environment) LazyGet(key string) (value string) {
-	value, err := e.Get(key)
-	if err != nil {
-		value = ""
+	value2, err := e.Get(key)
+	if err == nil {
+		value = value2
+	}
+	return
+}
+
+func (e *Environment) LazyGetInt(key string) (value int) {
+	value2, err := e.GetInt(key)
+	if err == nil {
+		value = value2
 	}
 	return
 }
@@ -190,6 +198,21 @@ func (e *Environment) Set(key, value string) (err error) {
 
 	e.writeLockIfNecessary()
 	e.data[key] = value
+	e.writeUnlockIfNecessary()
+
+	return
+}
+
+func (e *Environment) SetInt(key string, value int) (err error) {
+	key, err = e.formatKey(key)
+	if err != nil {
+		return
+	}
+
+	trueValue := strconv.Itoa(value)
+
+	e.writeLockIfNecessary()
+	e.data[key] = trueValue
 	e.writeUnlockIfNecessary()
 
 	return
