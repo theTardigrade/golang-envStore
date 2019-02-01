@@ -165,18 +165,58 @@ func (e *Environment) MustGetDuration(key string) (value time.Duration) {
 }
 
 func (e *Environment) LazyGet(key string) (value string) {
-	value2, err := e.Get(key)
-	if err == nil {
-		value = value2
+	if prospectiveValue, err := e.Get(key); err == nil {
+		value = prospectiveValue
 	}
+
+	return
+}
+
+func (e *Environment) LazyGetByteSlice(key string) (value []byte) {
+	if prospectiveValue, err := e.GetByteSlice(key); err == nil {
+		value = prospectiveValue
+	}
+
 	return
 }
 
 func (e *Environment) LazyGetInt(key string) (value int) {
-	value2, err := e.GetInt(key)
-	if err == nil {
-		value = value2
+	if prospectiveValue, err := e.GetInt(key); err == nil {
+		value = prospectiveValue
 	}
+
+	return
+}
+
+func (e *Environment) LazyGetUint(key string) (value uint) {
+	if prospectiveValue, err := e.GetUint(key); err == nil {
+		value = prospectiveValue
+	}
+
+	return
+}
+
+func (e *Environment) LazyGetFloat(key string) (value float64) {
+	if prospectiveValue, err := e.GetFloat(key); err == nil {
+		value = prospectiveValue
+	}
+
+	return
+}
+
+func (e *Environment) LazyGetBool(key string) (value bool) {
+	if prospectiveValue, err := e.GetBool(key); err == nil {
+		value = prospectiveValue
+	}
+
+	return
+}
+
+func (e *Environment) LazyGetDuration(key string) (value time.Duration) {
+	if prospectiveValue, err := e.GetDuration(key); err == nil {
+		value = prospectiveValue
+	}
+
 	return
 }
 
@@ -309,12 +349,13 @@ func (e *Environment) Pairs() [][]string {
 	e.readLockIfNecessary()
 	defer e.readUnlockIfNecessary()
 
-	i := 0
-	pairs := make([][]string, len(e.data))
+	l := len(e.data)
+	pairs := make([][]string, l)
+
 	for k, v := range e.data {
-		pairs[i] = make([]string, 2)
-		pairs[i][0], pairs[i][1] = k, v
-		i++
+		l--
+		pairs[l] = make([]string, 2)
+		pairs[l][0], pairs[l][1] = k, v
 	}
 
 	return pairs
@@ -324,31 +365,13 @@ func (e *Environment) String() string {
 	e.readLockIfNecessary()
 	defer e.readUnlockIfNecessary()
 
-	var err error
 	var buffer bytes.Buffer
-	var passedFirstIteration bool
 
 	for k, v := range e.data {
-		if passedFirstIteration {
-			if err = buffer.WriteByte('\n'); err != nil {
-				panic(err)
-			}
-		} else {
-			passedFirstIteration = true
-		}
-		if _, err = buffer.WriteString(k); err != nil {
-			panic(err)
-		}
-		if err = buffer.WriteByte('='); err != nil {
-			panic(err)
-		}
-		if _, err = buffer.WriteString(v); err != nil {
-			panic(err)
-		}
-	}
-
-	if err = buffer.WriteByte('\n'); err != nil {
-		panic(err)
+		buffer.WriteString(k)
+		buffer.WriteByte('=')
+		buffer.WriteString(v)
+		buffer.WriteByte('\n')
 	}
 
 	return buffer.String()
