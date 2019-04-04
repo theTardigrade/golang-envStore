@@ -3,6 +3,7 @@ package envStore
 import (
 	"bufio"
 	"bytes"
+	"encoding/json"
 	"os"
 )
 
@@ -41,6 +42,22 @@ func (e *Environment) LoadFromString(text string) error {
 		key, value, err := parseLine(string(line))
 		err = e.conditionalSet(key, value, err)
 		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (e *Environment) LoadFromJSON(data []byte) error {
+	dict := make(dictionary)
+
+	if err := json.Unmarshal(data, &dict); err != nil {
+		return err
+	}
+
+	for key, value := range dict {
+		if err := e.Set(key, value); err != nil {
 			return err
 		}
 	}
