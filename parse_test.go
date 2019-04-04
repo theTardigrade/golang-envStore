@@ -55,5 +55,4 @@ func TestParseLine(t *testing.T) {
 		test.AssertEqual(t, "key", d.key, key)
 		test.AssertEqual(t, "value", d.value, value)
 	}
-
 }

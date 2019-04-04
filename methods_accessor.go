@@ -2,6 +2,7 @@ package envStore
 
 import (
 	"bytes"
+	"encoding/json"
 	"errors"
 	"strconv"
 	"strings"
@@ -375,4 +376,11 @@ func (e *Environment) String() string {
 	}
 
 	return buffer.String()
+}
+
+func (e *Environment) JSON() ([]byte, error) {
+	e.readLockIfNecessary()
+	defer e.readUnlockIfNecessary()
+
+	return json.Marshal(e.data)
 }

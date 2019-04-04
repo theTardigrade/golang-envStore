@@ -29,7 +29,7 @@ func (e *Environment) LoadFromFile(path string) error {
 			return err
 		}
 	}
-	if scanner.Err() != nil {
+	if err := scanner.Err(); err != nil {
 		return err
 	}
 
