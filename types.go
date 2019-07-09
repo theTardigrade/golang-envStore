@@ -18,6 +18,7 @@ type Environment struct {
 type Config struct {
 	FromFilePaths    []string
 	FromStrings      []string
+	FromJSONSlices   [][]byte
 	FromEnvironments []*Environment
 	FromSystem       bool
 	UseMutex         bool

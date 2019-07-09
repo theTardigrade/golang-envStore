@@ -65,7 +65,7 @@ func (e *Environment) LoadFromJSON(data []byte) error {
 	return nil
 }
 
-func (e *Environment) LoadFromEnviroment(e2 *Environment) error {
+func (e *Environment) LoadFromEnvironment(e2 *Environment) error {
 	e2.readLockIfNecessary()
 	defer e2.readUnlockIfNecessary()
 

@@ -33,9 +33,17 @@ func New(cfg Config) (*Environment, error) {
 		}
 	}
 
+	if cfg.FromJSONSlices != nil {
+		for _, data := range cfg.FromJSONSlices {
+			if err := env.LoadFromJSON(data); err != nil {
+				return nil, err
+			}
+		}
+	}
+
 	if cfg.FromEnvironments != nil {
 		for _, env2 := range cfg.FromEnvironments {
-			if err := env.LoadFromEnviroment(env2); err != nil {
+			if err := env.LoadFromEnvironment(env2); err != nil {
 				return nil, err
 			}
 		}
