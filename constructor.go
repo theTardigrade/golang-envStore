@@ -6,14 +6,15 @@ import (
 
 func New(cfg *Config) (*Environment, error) {
 	env := &Environment{
-		data:             make(dictionary),
-		useMutex:         cfg.UseMutex,
-		ignoreEmptyLines: cfg.IgnoreEmptyLines,
-		acceptComments:   cfg.AcceptComments,
-		maxKeyLength:     cfg.MaxKeyLength,
+		data: make(dictionary),
 	}
 
 	if cfg != nil {
+		env.useMutex = cfg.UseMutex
+		env.ignoreEmptyLines = cfg.IgnoreEmptyLines
+		env.acceptComments = cfg.AcceptComments
+		env.maxKeyLength = cfg.MaxKeyLength
+
 		if cfg.UseMutex {
 			env.mutex = &sync.RWMutex{}
 		}
