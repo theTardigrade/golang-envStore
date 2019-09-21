@@ -2,7 +2,12 @@
 
 Store your environment variables from multiple sources (files, strings, JSON and the operating system) in one data structure, allowing easy access (potentially concurrent) from within your program.
 
-## example
+## Support
+
+If you use or find value in this package, please consider donating at PayPal: [https://www.paypal.me/jismithpp](https://www.paypal.me/jismithpp)
+
+## Example
+
 ```golang
 env, err := envStore.New(envStore.Config{
 	FromFilePaths: []string{"data1.env", "data2.env"},
