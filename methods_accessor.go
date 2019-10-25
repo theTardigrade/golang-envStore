@@ -51,6 +51,61 @@ func (e *Environment) GetInt(key string) (value int, err error) {
 	return
 }
 
+func (e *Environment) GetInt8(key string) (value int8, err error) {
+	rawValue, err := e.Get(key)
+	if err != nil {
+		return
+	}
+
+	value64, err := strconv.ParseInt(rawValue, 10, 8)
+	if err != nil {
+		return
+	}
+
+	value = int8(value64)
+	return
+}
+
+func (e *Environment) GetInt16(key string) (value int16, err error) {
+	rawValue, err := e.Get(key)
+	if err != nil {
+		return
+	}
+
+	value64, err := strconv.ParseInt(rawValue, 10, 16)
+	if err != nil {
+		return
+	}
+
+	value = int16(value64)
+	return
+}
+
+func (e *Environment) GetInt32(key string) (value int32, err error) {
+	rawValue, err := e.Get(key)
+	if err != nil {
+		return
+	}
+
+	value64, err := strconv.ParseInt(rawValue, 10, 32)
+	if err != nil {
+		return
+	}
+
+	value = int32(value64)
+	return
+}
+
+func (e *Environment) GetInt64(key string) (value int64, err error) {
+	rawValue, err := e.Get(key)
+	if err != nil {
+		return
+	}
+
+	value, err = strconv.ParseInt(rawValue, 10, 64)
+	return
+}
+
 func (e *Environment) GetUint(key string) (value uint, err error) {
 	rawValue, err := e.Get(key)
 	if err != nil {
@@ -129,6 +184,42 @@ func (e *Environment) MustGetInt(key string) (value int) {
 	return
 }
 
+func (e *Environment) MustGetInt8(key string) (value int8) {
+	value, err := e.GetInt8(key)
+	if err != nil {
+		mustGetPanic(err, key)
+	}
+
+	return
+}
+
+func (e *Environment) MustGetInt16(key string) (value int16) {
+	value, err := e.GetInt16(key)
+	if err != nil {
+		mustGetPanic(err, key)
+	}
+
+	return
+}
+
+func (e *Environment) MustGetInt32(key string) (value int32) {
+	value, err := e.GetInt32(key)
+	if err != nil {
+		mustGetPanic(err, key)
+	}
+
+	return
+}
+
+func (e *Environment) MustGetInt64(key string) (value int64) {
+	value, err := e.GetInt64(key)
+	if err != nil {
+		mustGetPanic(err, key)
+	}
+
+	return
+}
+
 func (e *Environment) MustGetUint(key string) (value uint) {
 	value, err := e.GetUint(key)
 	if err != nil {
@@ -183,6 +274,38 @@ func (e *Environment) LazyGetByteSlice(key string) (value []byte) {
 
 func (e *Environment) LazyGetInt(key string) (value int) {
 	if prospectiveValue, err := e.GetInt(key); err == nil {
+		value = prospectiveValue
+	}
+
+	return
+}
+
+func (e *Environment) LazyGetInt8(key string) (value int8) {
+	if prospectiveValue, err := e.GetInt8(key); err == nil {
+		value = prospectiveValue
+	}
+
+	return
+}
+
+func (e *Environment) LazyGetInt16(key string) (value int16) {
+	if prospectiveValue, err := e.GetInt16(key); err == nil {
+		value = prospectiveValue
+	}
+
+	return
+}
+
+func (e *Environment) LazyGetInt32(key string) (value int32) {
+	if prospectiveValue, err := e.GetInt32(key); err == nil {
+		value = prospectiveValue
+	}
+
+	return
+}
+
+func (e *Environment) LazyGetInt64(key string) (value int64) {
+	if prospectiveValue, err := e.GetInt64(key); err == nil {
 		value = prospectiveValue
 	}
 
