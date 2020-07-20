@@ -4,7 +4,7 @@ import (
 	"sync"
 	"testing"
 
-	internalTest "github.com/theTardigrade/envStore/test"
+	internalTest "github.com/theTardigrade/envStore/internal/test"
 )
 
 var testNewData = []struct {
