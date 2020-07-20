@@ -41,10 +41,6 @@ func TestNew(t *testing.T) {
 	for _, d := range testNewData {
 		env, err := New(d.cfg)
 		if err != nil {
-			if d.err == nil {
-				t.Error(err)
-			}
-
 			internalTest.AssertEqual(t, "error", d.err, err)
 			continue
 		}
