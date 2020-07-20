@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/theTardigrade/envStore/test"
+	internalTest "github.com/theTardigrade/envStore/internal/test"
 )
 
 var testParseLineData = []struct {
@@ -48,11 +48,12 @@ func TestParseLine(t *testing.T) {
 			if d.err == nil {
 				t.Error(err)
 			}
-			test.AssertEqual(t, "error", d.err, err)
+
+			internalTest.AssertEqual(t, "error", d.err, err)
 			continue
 		}
 
-		test.AssertEqual(t, "key", d.key, key)
-		test.AssertEqual(t, "value", d.value, value)
+		internalTest.AssertEqual(t, "key", d.key, key)
+		internalTest.AssertEqual(t, "value", d.value, value)
 	}
 }
