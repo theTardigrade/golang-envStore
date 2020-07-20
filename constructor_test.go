@@ -4,16 +4,16 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/theTardigrade/envStore/test"
+	internalTest "github.com/theTardigrade/envStore/test"
 )
 
 var testNewData = []struct {
-	cfg Config
+	cfg *Config
 	env *Environment
 	err error
 }{
 	{
-		Config{},
+		&Config{},
 		&Environment{
 			data:             make(dictionary),
 			useMutex:         false,
@@ -22,7 +22,7 @@ var testNewData = []struct {
 		nil,
 	},
 	{
-		Config{
+		&Config{
 			UseMutex:         true,
 			IgnoreEmptyLines: true,
 			FromStrings:      []string{"key=value"},
@@ -44,10 +44,11 @@ func TestNew(t *testing.T) {
 			if d.err == nil {
 				t.Error(err)
 			}
-			test.AssertEqual(t, "error", d.err, err)
+
+			internalTest.AssertEqual(t, "error", d.err, err)
 			continue
 		}
 
-		test.AssertEqual(t, "environment", d.env, env)
+		internalTest.AssertEqual(t, "environment", d.env, env)
 	}
 }
