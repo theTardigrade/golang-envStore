@@ -117,7 +117,20 @@ func (e *Environment) GetUint(key string) (value uint, err error) {
 	return
 }
 
-func (e *Environment) GetFloat(key string) (value float64, err error) {
+func (e *Environment) GetFloat32(key string) (value float32, err error) {
+	rawValue, err := e.Get(key)
+	if err != nil {
+		return
+	}
+
+	value64, err := strconv.ParseFloat(rawValue, 32)
+	if err == nil {
+		value = float32(value64)
+	}
+	return
+}
+
+func (e *Environment) GetFloat64(key string) (value float64, err error) {
 	rawValue, err := e.Get(key)
 	if err != nil {
 		return
@@ -229,8 +242,17 @@ func (e *Environment) MustGetUint(key string) (value uint) {
 	return
 }
 
-func (e *Environment) MustGetFloat(key string) (value float64) {
-	value, err := e.GetFloat(key)
+func (e *Environment) MustGetFloat32(key string) (value float32) {
+	value, err := e.GetFloat32(key)
+	if err != nil {
+		mustGetPanic(err, key)
+	}
+
+	return
+}
+
+func (e *Environment) MustGetFloat64(key string) (value float64) {
+	value, err := e.GetFloat64(key)
 	if err != nil {
 		mustGetPanic(err, key)
 	}
@@ -320,8 +342,16 @@ func (e *Environment) LazyGetUint(key string) (value uint) {
 	return
 }
 
-func (e *Environment) LazyGetFloat(key string) (value float64) {
-	if prospectiveValue, err := e.GetFloat(key); err == nil {
+func (e *Environment) LazyGetFloat32(key string) (value float32) {
+	if prospectiveValue, err := e.GetFloat32(key); err == nil {
+		value = prospectiveValue
+	}
+
+	return
+}
+
+func (e *Environment) LazyGetFloat64(key string) (value float64) {
+	if prospectiveValue, err := e.GetFloat64(key); err == nil {
 		value = prospectiveValue
 	}
 
@@ -344,14 +374,14 @@ func (e *Environment) LazyGetDuration(key string) (value time.Duration) {
 	return
 }
 
-func (e *Environment) formatKey(key string) (string, error) {
-	key = strings.ToUpper(key)
-
+func (e *Environment) formatKey(key string) (formattedKey string, err error) {
 	if e.maxKeyLength > 0 && len(key) > e.maxKeyLength {
-		return "", ErrKeyLenBeyondMax
+		err = ErrKeyLenBeyondMax
+	} else {
+		formattedKey = strings.ToUpper(key)
 	}
 
-	return key, nil
+	return
 }
 
 func (e *Environment) Set(key, value string) (err error) {
