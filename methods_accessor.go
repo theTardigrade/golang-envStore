@@ -31,6 +31,16 @@ func (e *Environment) Get(key string) (value string, err error) {
 	return
 }
 
+func (e *Environment) GetFields(key string) (value []string, err error) {
+	rawValue, err := e.Get(key)
+	if err != nil {
+		return
+	}
+
+	value = strings.Fields(rawValue)
+	return
+}
+
 func (e *Environment) GetByteSlice(key string) (value []byte, err error) {
 	rawValue, err := e.Get(key)
 	if err != nil {
@@ -179,6 +189,15 @@ func (e *Environment) MustGet(key string) (value string) {
 	return
 }
 
+func (e *Environment) MustGetFields(key string) (value []string) {
+	value, err := e.GetFields(key)
+	if err != nil {
+		mustGetPanic(err, key)
+	}
+
+	return
+}
+
 func (e *Environment) MustGetByteSlice(key string) (value []byte) {
 	value, err := e.GetByteSlice(key)
 	if err != nil {
@@ -280,6 +299,14 @@ func (e *Environment) MustGetDuration(key string) (value time.Duration) {
 
 func (e *Environment) LazyGet(key string) (value string) {
 	if prospectiveValue, err := e.Get(key); err == nil {
+		value = prospectiveValue
+	}
+
+	return
+}
+
+func (e *Environment) LazyGetFields(key string) (value []string) {
+	if prospectiveValue, err := e.GetFields(key); err == nil {
 		value = prospectiveValue
 	}
 
