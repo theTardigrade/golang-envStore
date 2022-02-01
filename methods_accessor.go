@@ -14,6 +14,16 @@ var (
 	ErrKeyLenBeyondMax = errors.New("key length is greater than the maximum allowed")
 )
 
+func (e *Environment) formatKey(key string) (formattedKey string, err error) {
+	if e.maxKeyLength > 0 && len(key) > e.maxKeyLength {
+		err = ErrKeyLenBeyondMax
+	} else {
+		formattedKey = strings.ToUpper(key)
+	}
+
+	return
+}
+
 func (e *Environment) Get(key string) (value string, err error) {
 	key, err = e.formatKey(key)
 	if err != nil {
@@ -124,6 +134,61 @@ func (e *Environment) GetUint(key string) (value uint, err error) {
 
 	value64, err := strconv.ParseUint(rawValue, 10, 0)
 	value = uint(value64)
+	return
+}
+
+func (e *Environment) GetUint8(key string) (value uint8, err error) {
+	rawValue, err := e.Get(key)
+	if err != nil {
+		return
+	}
+
+	value64, err := strconv.ParseUint(rawValue, 10, 8)
+	if err != nil {
+		return
+	}
+
+	value = uint8(value64)
+	return
+}
+
+func (e *Environment) GetUint16(key string) (value uint16, err error) {
+	rawValue, err := e.Get(key)
+	if err != nil {
+		return
+	}
+
+	value64, err := strconv.ParseUint(rawValue, 10, 16)
+	if err != nil {
+		return
+	}
+
+	value = uint16(value64)
+	return
+}
+
+func (e *Environment) GetUint32(key string) (value uint32, err error) {
+	rawValue, err := e.Get(key)
+	if err != nil {
+		return
+	}
+
+	value64, err := strconv.ParseInt(rawValue, 10, 32)
+	if err != nil {
+		return
+	}
+
+	value = uint32(value64)
+	return
+}
+
+func (e *Environment) GetUint64(key string) (value uint64, err error) {
+	rawValue, err := e.Get(key)
+	if err != nil {
+		return
+	}
+
+	value, err = strconv.ParseUint(rawValue, 10, 64)
 	return
 }
 
@@ -261,6 +326,42 @@ func (e *Environment) MustGetUint(key string) (value uint) {
 	return
 }
 
+func (e *Environment) MustGetUint8(key string) (value uint8) {
+	value, err := e.GetUint8(key)
+	if err != nil {
+		mustGetPanic(err, key)
+	}
+
+	return
+}
+
+func (e *Environment) MustGetUint16(key string) (value uint16) {
+	value, err := e.GetUint16(key)
+	if err != nil {
+		mustGetPanic(err, key)
+	}
+
+	return
+}
+
+func (e *Environment) MustGetUint32(key string) (value uint32) {
+	value, err := e.GetUint32(key)
+	if err != nil {
+		mustGetPanic(err, key)
+	}
+
+	return
+}
+
+func (e *Environment) MustGetUint64(key string) (value uint64) {
+	value, err := e.GetUint64(key)
+	if err != nil {
+		mustGetPanic(err, key)
+	}
+
+	return
+}
+
 func (e *Environment) MustGetFloat32(key string) (value float32) {
 	value, err := e.GetFloat32(key)
 	if err != nil {
@@ -369,6 +470,38 @@ func (e *Environment) LazyGetUint(key string) (value uint) {
 	return
 }
 
+func (e *Environment) LazyGetUint8(key string) (value uint8) {
+	if prospectiveValue, err := e.GetUint8(key); err == nil {
+		value = prospectiveValue
+	}
+
+	return
+}
+
+func (e *Environment) LazyGetUint16(key string) (value uint16) {
+	if prospectiveValue, err := e.GetUint16(key); err == nil {
+		value = prospectiveValue
+	}
+
+	return
+}
+
+func (e *Environment) LazyGetUint32(key string) (value uint32) {
+	if prospectiveValue, err := e.GetUint32(key); err == nil {
+		value = prospectiveValue
+	}
+
+	return
+}
+
+func (e *Environment) LazyGetUint64(key string) (value uint64) {
+	if prospectiveValue, err := e.GetUint64(key); err == nil {
+		value = prospectiveValue
+	}
+
+	return
+}
+
 func (e *Environment) LazyGetFloat32(key string) (value float32) {
 	if prospectiveValue, err := e.GetFloat32(key); err == nil {
 		value = prospectiveValue
@@ -399,74 +532,6 @@ func (e *Environment) LazyGetDuration(key string) (value time.Duration) {
 	}
 
 	return
-}
-
-func (e *Environment) formatKey(key string) (formattedKey string, err error) {
-	if e.maxKeyLength > 0 && len(key) > e.maxKeyLength {
-		err = ErrKeyLenBeyondMax
-	} else {
-		formattedKey = strings.ToUpper(key)
-	}
-
-	return
-}
-
-func (e *Environment) Set(key, value string) (err error) {
-	key, err = e.formatKey(key)
-	if err != nil {
-		return
-	}
-
-	e.writeLockIfNecessary()
-	e.data[key] = value
-	e.writeUnlockIfNecessary()
-
-	return
-}
-
-func (e *Environment) SetInt(key string, value int) (err error) {
-	key, err = e.formatKey(key)
-	if err != nil {
-		return
-	}
-
-	trueValue := strconv.Itoa(value)
-
-	e.writeLockIfNecessary()
-	e.data[key] = trueValue
-	e.writeUnlockIfNecessary()
-
-	return
-}
-
-func (e *Environment) MustSet(key, value string) {
-	if err := e.Set(key, value); err != nil {
-		panic(err)
-	}
-}
-
-func (e *Environment) Unset(key string) (err error) {
-	if key, err = e.formatKey(key); err != nil {
-		return
-	}
-
-	e.writeLockIfNecessary()
-	delete(e.data, key)
-	e.writeUnlockIfNecessary()
-
-	return
-}
-
-func (e *Environment) MustUnset(key string) {
-	if err := e.Unset(key); err != nil {
-		panic(err)
-	}
-}
-
-func (e *Environment) Clear() {
-	e.writeLockIfNecessary()
-	e.data = make(dictionary)
-	e.writeUnlockIfNecessary()
 }
 
 func (e *Environment) Contains(key string) (found bool, err error) {
