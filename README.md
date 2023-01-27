@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	env, err := envStore.New(envStore.Config{
+	env, err := envStore.New(&envStore.Config{
 		FromFilePaths: []string{"data1.env", "data2.env"},
 		FromStrings: []string{"x=128\ny=test\nz=/bin/bash"},
 		FromJSONSlices: [][]byte{[]byte(`{"key":"value","key2":"value2"}`)},

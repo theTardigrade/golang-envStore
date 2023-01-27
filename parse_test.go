@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"testing"
 
-	internalTest "github.com/theTardigrade/envStore/internal/test"
+	internalTest "github.com/theTardigrade/golang-envStore/internal/test"
 )
 
 var testParseLineData = []struct {
